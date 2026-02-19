@@ -1,8 +1,6 @@
 <?php
-require_once 'db.php';
-require_once '../basics/Review.php';
 
-class ReviewManager {
+class ReviewRepository {
     private PDO $db;
 
     public function __construct(PDO $db) {

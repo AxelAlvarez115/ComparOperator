@@ -1,10 +1,6 @@
 <?php
-require_once 'db.php';
-require_once 'DestinationManager.php';
-require_once 'AuthorManager.php';
-require_once '../basics/Score.php';
 
-class ScoreManager {
+class ScoreRepository {
     private PDO $db;
 
     public function __construct(PDO $db) {

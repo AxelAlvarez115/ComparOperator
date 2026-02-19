@@ -1,6 +1,8 @@
-<?php
-$destinationManager = new DestinationManager($db);
-$destinations = $destinationManager->getAll();
+<!-- <?php
+require_once '../classes/repositorys/DestinationRepository.php';
+require_once '../db.php';
+$destinationRepository = new DestinationRepository($db);
+$destinations = $destinationRepository->getAll();
 
 ?>
 <section id="Destinations" class="flex flex-col gap-4 bg-white px-4 md:px-30 xl:px-70 py-10 text-slate-700">
@@ -11,7 +13,7 @@ $destinations = $destinationManager->getAll();
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- boucle foreach affiche des cards destinations -->
         <?php
-        include 'data.php';
+        // include 'data.php';
         foreach ($destinations as $destination) {
             include 'partials/cards/card_destination.php';
         }
@@ -33,4 +35,4 @@ $destinations = $destinationManager->getAll();
             <div class="reviewsContainer mt-4"></div>
         </form>
     </div>
-</section>
+</section> -->

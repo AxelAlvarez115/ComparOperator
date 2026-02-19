@@ -1,8 +1,6 @@
 <?php
-require_once 'Author.php';
-require_once 'db.php';
 
-class AuthorManager {
+class AuthorRepository {
     private PDO $db;
 
     public function __construct(PDO $db) {

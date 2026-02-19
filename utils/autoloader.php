@@ -9,6 +9,9 @@ spl_autoload_register(function ($className) {
         case substr($className, -7) === 'Manager':
             $directory = 'managers';
             break;
+        case substr($className, -10) === 'Repository':
+            $directory = 'repositorys';
+            break;
         default:
             $directory = 'basics';
             break;

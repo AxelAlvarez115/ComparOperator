@@ -1,11 +1,9 @@
-<?php
-$tour_operators = [];
-foreach ($data_tour_operators as $data) {
-    $scoreManager = new ScoreManager($db);
-    $grade_total = $scoreManager->getGradeTotalByTourOperatorId($data['id']);
-    $data['grade_total'] = $grade_total;
-    $tour_operators[] = new TourOperator($data);
-}
+<!-- <?php
+require_once '../classes/repositorys/TourOperatorRepository.php';
+require_once '../classes/repositorys/ReviewRepository.php';
+require_once 'db.php';
+$tourOperatorRepository = new TourOperatorRepository($db);
+$tourOperators = $tourOperatorRepository->getTourOperatorByDestinationLocation($_GET['location'] ?? '');
 ?>
 
 <section id="TourOperators" class="flex flex-col gap-4 bg-white px-4 xl:px-70 md:px-30 py-10 text-slate-700">
@@ -15,7 +13,8 @@ foreach ($data_tour_operators as $data) {
     <div class="flex flex-col gap-4">
         <!-- boucle foreach affiche des cards tour operators -->
          <?php
-         foreach ($tour_operators as $tour_operator) {
+         foreach ($tourOperators as $tourOperator) {
+            $db = Database::getInstance()->getConnection();
             include '../partials/cards/card_tour_operator.php';
          }
          ?>
@@ -42,4 +41,4 @@ foreach ($data_tour_operators as $data) {
         </form>
         <div class="reviewsContainer mt-4"></div>
     </div>
-</div>
+</div> -->

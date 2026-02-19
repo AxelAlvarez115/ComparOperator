@@ -1,38 +1,23 @@
 <?php
-require_once 'db.php';
-require_once 'Destination.php';
 
-class DestinationManager {
+class DestinationRepository {
     private PDO $db;
 
     public function __construct(PDO $db) {
         $this->db = $db;
     }
 
-    public function getAll(){
-        $request = $this->db->query("SELECT * FROM destination");
-        $destinations = [];
-
-        while($data = $request->fetch(PDO::FETCH_ASSOC)){
-            $destinations[] = new Destination(
-            $data['id'],
-            $data['location'],
-            $data['country'],
-            $data['image'],
-            $data['price'],
-            $data['tour_operator_id']
-            );
-        }
-        return $destinations;
+    public function findAll(): array
+    {
+        $stmt = $this->db->query('SELECT * FROM destination');
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => new Destination($row), $rows);
     }
 
-    function getAllDistinctLocations() {
-        $request = $this->db->query("SELECT DISTINCT location FROM destination");
-        $locations = [];
-        while ($data = $request->fetch(PDO::FETCH_ASSOC)) {
-            $locations[] = $data['location'];
-        }
-        return $locations;
+    function findAllMainDestination() {
+        $stmt = $this->db->query("SELECT * FROM destination WHERE tour_operator_id = 0");
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => new Destination($row), $rows);
     }
 
     public function getDestinationById($id) {
@@ -57,12 +42,7 @@ class DestinationManager {
         $request->execute([$location]);
         $data = $request->fetch(PDO::FETCH_ASSOC);
         if ($data) {
-            return new Destination(
-                $data['id'],
-                $data['location'],
-                $data['country'],
-                $data['image']
-            );
+            return new Destination($data);
         }
         return null;
     }
