@@ -1,4 +1,7 @@
-<?php include '../partials/head.php'; ?>
+<?php 
+require_once '../utils/autoloader.php';
+include '../partials/head.php'; 
+?>
 <body>
     <?php include '../partials/header.php'; ?>
     <main>

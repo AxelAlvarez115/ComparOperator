@@ -3,30 +3,46 @@
 class TourOperator {
     private int $id;
     private string $name;
-    private bool $is_premium;
-    private ?string $link;
-    private int $grade_count;
-    private int $grade_total;
+    private string $link;
+    private bool $isPremium;
+    private array $destinations;
+    private array $reviews;
+    private array $scores;
 
-    public function __construct($id,$name,$is_premium,$link=null, $grade_count, $grade_total){
-        $this->id = $id;
-        $this->name = $name;
-        $this->is_premium = $is_premium;
-        $this->link = $link;
-        $this->grade_count = $grade_count;
-        $this->grade_total = $grade_total;
+    public function __construct(array $data) {
+        $this->id = $data['id'];
+        $this->name = $data['name'];
+        $this->isPremium = $data['isPremium'];
+        $this->link = $data['link'];
+        $this->destinations = $data['destinations'] ?? [];
+        $this->reviews = $data['reviews'] ?? [];
+        $this->scores = $data['scores'] ?? [];
     }
     public function getId(){ 
         return $this->id;
     }
 
-    public function isPremium(){ 
-        return $this->is_premium; }
+    public function getName() {
+        return $this->name;
+    }
 
+    public function getLink() {
+        return $this->link;
+    }
 
-    public function getName(){ 
-        return $this->name; }
-        
-    public function getLink(){ 
-        return $this->link; }
+    public function getIsPremium() {
+        return $this->isPremium;
+    }
+
+    public function getDestinations() {
+        return $this->destinations;
+    }
+
+    public function getReviews() {
+        return $this->reviews;
+    }
+
+    public function getScores() {
+        return $this->scores;
+    }
 }

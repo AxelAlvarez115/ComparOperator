@@ -1,3 +1,8 @@
+<?php
+$destinationManager = new DestinationManager($db);
+$destinations = $destinationManager->getAll();
+
+?>
 <section id="Destinations" class="flex flex-col gap-4 bg-white px-4 md:px-30 xl:px-70 py-10 text-slate-700">
     <div class="flex justify-between items-center mb-4 font-bold">
         <h2 class="text-2xl">Destinations</h2>

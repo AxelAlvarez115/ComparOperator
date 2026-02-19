@@ -1,3 +1,13 @@
+<?php
+$tour_operators = [];
+foreach ($data_tour_operators as $data) {
+    $scoreManager = new ScoreManager($db);
+    $grade_total = $scoreManager->getGradeTotalByTourOperatorId($data['id']);
+    $data['grade_total'] = $grade_total;
+    $tour_operators[] = new TourOperator($data);
+}
+?>
+
 <section id="TourOperators" class="flex flex-col gap-4 bg-white px-4 xl:px-70 md:px-30 py-10 text-slate-700">
     <div class="flex justify-between items-center mb-4 font-bold">
         <h2 class="text-2xl">Tour Operators for <?= htmlspecialchars($_GET['location'] ?? '') ?></h2>
@@ -5,7 +15,7 @@
     <div class="flex flex-col gap-4">
         <!-- boucle foreach affiche des cards tour operators -->
          <?php
-         for ($i = 1; $i <= 5; $i++) {
+         foreach ($tour_operators as $tour_operator) {
             include '../partials/cards/card_tour_operator.php';
          }
          ?>
