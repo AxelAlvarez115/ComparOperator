@@ -19,12 +19,19 @@
         </div>
     </div>
     <div class="flex items-center gap-3">
+        <?php if (isLoggedIn()): ?>
         <button
             class="reviewBtn cursor-pointer bg-orange-400 hover:bg-white hover:text-orange-400 text-white border-2 border-orange-400 rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
             data-operator-id="<?= $tourOperator->getId() ?>"
             data-operator-name="<?= htmlspecialchars($tourOperator->getName()) ?>">
             Reviews
         </button>
+        <?php else: ?>
+        <a href="/ComparOperator/views/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI'] ?? '/ComparOperator/') ?>"
+            class="bg-orange-400 hover:bg-white hover:text-orange-400 text-white border-2 border-orange-400 rounded-full px-4 py-1.5 text-sm font-medium transition-colors">
+            Reviews
+        </a>
+        <?php endif; ?>
         <div class="flex items-center gap-1 bg-orange-50 border border-orange-200 rounded-full px-3 py-1.5">
             <img src="/ComparOperator/assets/img/icons/star_rate.svg" alt="star" class="w-4 h-4">
             <span class="text-sm font-bold text-orange-500"><?= htmlspecialchars($tourOperator->getGradeTotal()) ?></span>

@@ -159,12 +159,77 @@ INSERT INTO `destination` (`id`, `location`, `country`, `price`, `image`, `tour_
 (39, 'Las Vegas', 'USA', 2000, 'las_vegas.jpg', 10),  -- Claire Littleton
 (40, 'Las Vegas', 'USA', 2100, 'las_vegas.jpg',  4);  -- Jack Shephard
 
+-- -------------------------------------------------------
+-- 3 opérateurs supplémentaires par destination (IDs 41-70)
+-- -------------------------------------------------------
+
+-- New York (+3)
+INSERT INTO `destination` (`id`, `location`, `country`, `price`, `image`, `tour_operator_id`) VALUES
+(41, 'New York', 'USA', 2850, 'new_york.webp',  5),  -- Benjamin Linus
+(42, 'New York', 'USA', 3150, 'new_york.webp',  6),  -- Hurley Reyes
+(43, 'New York', 'USA', 2700, 'new_york.webp',  7);  -- Sayid Jarrah
+
+-- Paris (+3)
+INSERT INTO `destination` (`id`, `location`, `country`, `price`, `image`, `tour_operator_id`) VALUES
+(44, 'Paris', 'France', 2200, 'paris.jpg',  2),  -- Kate Austen
+(45, 'Paris', 'France', 1950, 'paris.jpg',  4),  -- Jack Shephard
+(46, 'Paris', 'France', 2350, 'paris.jpg',  9);  -- Jacob Traveler
+
+-- London (+3)
+INSERT INTO `destination` (`id`, `location`, `country`, `price`, `image`, `tour_operator_id`) VALUES
+(47, 'London', 'UK', 1600, 'london.jpg',  1),  -- James Ford
+(48, 'London', 'UK', 1750, 'london.jpg',  4),  -- Jack Shephard
+(49, 'London', 'UK', 1250, 'london.jpg',  8);  -- Bonus Miles
+
+-- Tokyo (+3)
+INSERT INTO `destination` (`id`, `location`, `country`, `price`, `image`, `tour_operator_id`) VALUES
+(50, 'Tokyo', 'Japan', 2300, 'tokyo.webp',  3),  -- John Locke
+(51, 'Tokyo', 'Japan', 2650, 'tokyo.webp',  6),  -- Hurley Reyes
+(52, 'Tokyo', 'Japan', 2500, 'tokyo.webp',  7);  -- Sayid Jarrah
+
+-- Bangkok (+3)
+INSERT INTO `destination` (`id`, `location`, `country`, `price`, `image`, `tour_operator_id`) VALUES
+(53, 'Bangkok', 'Thailand', 2100, 'bangkok.webp',  2),  -- Kate Austen
+(54, 'Bangkok', 'Thailand', 1850, 'bangkok.webp',  7),  -- Sayid Jarrah
+(55, 'Bangkok', 'Thailand', 2200, 'bangkok.webp',  9);  -- Jacob Traveler
+
+-- Istanbul (+3)
+INSERT INTO `destination` (`id`, `location`, `country`, `price`, `image`, `tour_operator_id`) VALUES
+(56, 'Istanbul', 'Turkey', 1700, 'istanbul.jpg',  2),  -- Kate Austen
+(57, 'Istanbul', 'Turkey', 1900, 'istanbul.jpg',  6),  -- Hurley Reyes
+(58, 'Istanbul', 'Turkey', 2000, 'istanbul.jpg', 10);  -- Claire Littleton
+
+-- Dubai (+3)
+INSERT INTO `destination` (`id`, `location`, `country`, `price`, `image`, `tour_operator_id`) VALUES
+(59, 'Dubai', 'UAE', 1850, 'dubai.jpeg',  3),  -- John Locke
+(60, 'Dubai', 'UAE', 2050, 'dubai.jpeg',  7),  -- Sayid Jarrah
+(61, 'Dubai', 'UAE', 2300, 'dubai.jpeg',  9);  -- Jacob Traveler
+
+-- Kuala Lumpur (+3)
+INSERT INTO `destination` (`id`, `location`, `country`, `price`, `image`, `tour_operator_id`) VALUES
+(62, 'Kuala Lumpur', 'Malaysia', 2200, 'kuala_lumpur.jpg',  2),  -- Kate Austen
+(63, 'Kuala Lumpur', 'Malaysia', 2500, 'kuala_lumpur.jpg',  4),  -- Jack Shephard
+(64, 'Kuala Lumpur', 'Malaysia', 1900, 'kuala_lumpur.jpg',  7);  -- Sayid Jarrah
+
+-- Barcelona (+3)
+INSERT INTO `destination` (`id`, `location`, `country`, `price`, `image`, `tour_operator_id`) VALUES
+(65, 'Barcelona', 'Spain', 1550, 'barcelona.jpg',  3),  -- John Locke
+(66, 'Barcelona', 'Spain', 1750, 'barcelona.jpg',  5),  -- Benjamin Linus
+(67, 'Barcelona', 'Spain', 1800, 'barcelona.jpg',  9);  -- Jacob Traveler
+
+-- Las Vegas (+3)
+INSERT INTO `destination` (`id`, `location`, `country`, `price`, `image`, `tour_operator_id`) VALUES
+(68, 'Las Vegas', 'USA', 2050, 'las_vegas.jpg',  2),  -- Kate Austen
+(69, 'Las Vegas', 'USA', 1950, 'las_vegas.jpg',  6),  -- Hurley Reyes
+(70, 'Las Vegas', 'USA', 1750, 'las_vegas.jpg',  8);  -- Bonus Miles
+
 -- ============================================================
 -- TABLE : review
 -- ============================================================
 CREATE TABLE `review` (
   `id`               INT           NOT NULL AUTO_INCREMENT,
   `message`          VARCHAR(1000) NOT NULL,
+  `grade`            INT           NULL,
   `tour_operator_id` INT           NOT NULL,
   `author_id`        INT           NOT NULL,
   PRIMARY KEY (`id`),
@@ -174,48 +239,48 @@ CREATE TABLE `review` (
   CONSTRAINT `fk_review_author`   FOREIGN KEY (`author_id`)        REFERENCES `author`         (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `review` (`id`, `message`, `tour_operator_id`, `author_id`) VALUES
--- James Ford (1)
-(1,  'Excellent service, James connaît chaque recoin de New York. Très pro et sympa.',       1, 1),
-(2,  'Super expérience à Paris grâce à James. Rapport qualité-prix imbattable.',             1, 2),
-(3,  'Guide attentionné, toujours à l\'écoute. Je recommande vivement James Ford Travel.',  1, 7),
+INSERT INTO `review` (`id`, `message`, `grade`, `tour_operator_id`, `author_id`) VALUES
+-- James Ford (1) — moyenne 4.7
+(1,  'Excellent service, James connaît chaque recoin de New York. Très pro et sympa.',       5, 1, 1),
+(2,  'Super expérience à Paris grâce à James. Rapport qualité-prix imbattable.',             4, 1, 2),
+(3,  'Guide attentionné, toujours à l\'écoute. Je recommande vivement James Ford Travel.',  5, 1, 7),
 
--- Kate Austen (2)
-(4,  'Kate a organisé notre séjour à Tokyo à la perfection. Zéro stress, tout était prévu.',2, 4),
-(5,  'Très bonne agence, itinéraire bien pensé et guide très cultivée.',                     2, 5),
+-- Kate Austen (2) — moyenne 4.5
+(4,  'Kate a organisé notre séjour à Tokyo à la perfection. Zéro stress, tout était prévu.',5, 2, 4),
+(5,  'Très bonne agence, itinéraire bien pensé et guide très cultivée.',                     4, 2, 5),
 
--- John Locke (3)
-(6,  'Surpris par la qualité du service. John Locke Travel a dépassé toutes nos attentes.', 3, 6),
-(7,  'Opérateur sérieux, communication claire et réactive. Très bon séjour à Londres.',     3, 8),
-(8,  'Bon rapport qualité-prix pour Las Vegas. Je rebookerai sans hésiter.',                3, 1),
+-- John Locke (3) — moyenne 3.7
+(6,  'Surpris par la qualité du service. John Locke Travel a dépassé toutes nos attentes.', 4, 3, 6),
+(7,  'Opérateur sérieux, communication claire et réactive. Très bon séjour à Londres.',     4, 3, 8),
+(8,  'Bon rapport qualité-prix pour Las Vegas. Je rebookerai sans hésiter.',                3, 3, 1),
 
--- Jack Shephard (4)
-(9,  'Service d\'exception du début à la fin. Jack Shephard est un vrai professionnel.',    4, 2),
-(10, 'Tokyo avec Jack Shephard Travel : une expérience inoubliable. 10/10.',                4, 3),
+-- Jack Shephard (4) — moyenne 5.0
+(9,  'Service d\'exception du début à la fin. Jack Shephard est un vrai professionnel.',    5, 4, 2),
+(10, 'Tokyo avec Jack Shephard Travel : une expérience inoubliable. 10/10.',                5, 4, 3),
 
--- Benjamin Linus (5)
-(11, 'Itinéraire original et bien ficelé. Benjamin a un vrai sens du détail.',              5, 4),
-(12, 'Superbe voyage à Bangkok, tout était parfaitement coordonné. Merci Benjamin !',       5, 5),
+-- Benjamin Linus (5) — moyenne 4.5
+(11, 'Itinéraire original et bien ficelé. Benjamin a un vrai sens du détail.',              4, 5, 4),
+(12, 'Superbe voyage à Bangkok, tout était parfaitement coordonné. Merci Benjamin !',       5, 5, 5),
 
--- Hurley Reyes (6)
-(13, 'Hurley est trop cool, l\'ambiance était top tout le voyage. On a adoré Paris !',      6, 6),
-(14, 'Voyage plein de bonne humeur et bien organisé. Highly recommended.',                  6, 7),
+-- Hurley Reyes (6) — moyenne 4.5
+(13, 'Hurley est trop cool, l\'ambiance était top tout le voyage. On a adoré Paris !',      5, 6, 6),
+(14, 'Voyage plein de bonne humeur et bien organisé. Highly recommended.',                  4, 6, 7),
 
--- Sayid Jarrah (7)
-(15, 'Ponctuel, efficace et très bien organisé. Istanbul était magnifique.',                7, 8),
-(16, 'Service nickel, Sayid gère tout à la perfection. On a rien eu à faire.',              7, 1),
+-- Sayid Jarrah (7) — moyenne 4.0
+(15, 'Ponctuel, efficace et très bien organisé. Istanbul était magnifique.',                4, 7, 8),
+(16, 'Service nickel, Sayid gère tout à la perfection. On a rien eu à faire.',              4, 7, 1),
 
--- Bonus Miles (8)
-(17, 'Bon opérateur pour les petits budgets. Barcelone à prix raisonnable, sans surprise.', 8, 2),
-(18, 'Correct, rien d\'extraordinaire mais le service était honnête et propre.',            8, 3),
+-- Bonus Miles (8) — moyenne 3.0
+(17, 'Bon opérateur pour les petits budgets. Barcelone à prix raisonnable, sans surprise.', 3, 8, 2),
+(18, 'Correct, rien d\'extraordinaire mais le service était honnête et propre.',            3, 8, 3),
 
--- Jacob Traveler (9)
-(19, 'Expérience unique à Kuala Lumpur. Jacob a une façon de raconter l\'histoire locale.', 9, 3),
-(20, 'Très agréable, Jacob est passionné par ses destinations. Très inspirant !',           9, 4),
+-- Jacob Traveler (9) — moyenne 4.5
+(19, 'Expérience unique à Kuala Lumpur. Jacob a une façon de raconter l\'histoire locale.', 4, 9, 3),
+(20, 'Très agréable, Jacob est passionné par ses destinations. Très inspirant !',           5, 9, 4),
 
--- Claire Littleton (10)
-(21, 'Claire nous a fait découvrir Dubai comme si on était des locaux. Magnifique.',       10, 5),
-(22, 'Super chaleureuse et très professionnelle. Le meilleur séjour à Las Vegas ever.',    10, 6);
+-- Claire Littleton (10) — moyenne 4.5
+(21, 'Claire nous a fait découvrir Dubai comme si on était des locaux. Magnifique.',        5, 10, 5),
+(22, 'Super chaleureuse et très professionnelle. Le meilleur séjour à Las Vegas ever.',     4, 10, 6);
 
 -- ============================================================
 -- TABLE : score
@@ -305,7 +370,7 @@ INSERT INTO `user` (`id`, `username`, `email`, `password`, `role`) VALUES
 -- ============================================================
 ALTER TABLE `tour_operator` AUTO_INCREMENT = 11;
 ALTER TABLE `author`        AUTO_INCREMENT = 9;
-ALTER TABLE `destination`   AUTO_INCREMENT = 41;
+ALTER TABLE `destination`   AUTO_INCREMENT = 71;
 ALTER TABLE `review`        AUTO_INCREMENT = 23;
 ALTER TABLE `score`         AUTO_INCREMENT = 23;
 ALTER TABLE `user`          AUTO_INCREMENT = 3;

@@ -33,4 +33,11 @@ class ScoreRepository {
         );
         return $stmt->execute([$value, $tourOperatorId, $authorId]);
     }
+
+    public function createOrIgnore(int $value, int $tourOperatorId, int $authorId): void {
+        $stmt = $this->db->prepare(
+            'INSERT IGNORE INTO score (value, tour_operator_id, author_id) VALUES (?, ?, ?)'
+        );
+        $stmt->execute([$value, $tourOperatorId, $authorId]);
+    }
 }

@@ -3,6 +3,13 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . '/../utils/autoloader.php';
 require_once __DIR__ . '/../utils/connection.php';
+require_once __DIR__ . '/../utils/session.php';
+
+if (!isLoggedIn()) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Authentication required']);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -12,9 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-$username        = trim($data['username'] ?? '');
-$content         = trim($data['content'] ?? '');
-$tourOperatorId  = (int) ($data['tour_operator_id'] ?? 0);
+$username       = trim($data['username'] ?? '');
+$content        = trim($data['content'] ?? '');
+$tourOperatorId = (int) ($data['tour_operator_id'] ?? 0);
+$gradeRaw       = $data['grade'] ?? null;
+$grade          = ($gradeRaw !== null) ? (int) $gradeRaw : null;
+if ($grade !== null && ($grade < 1 || $grade > 5)) $grade = null;
 
 if ($username === '' || $content === '' || $tourOperatorId <= 0) {
     http_response_code(422);
@@ -25,13 +35,15 @@ if ($username === '' || $content === '' || $tourOperatorId <= 0) {
 $manager = new Manager($db);
 
 try {
-    $success = $manager->createReview($content, $tourOperatorId, $username);
+    $success = $manager->createReview($content, $tourOperatorId, $username, $grade);
 
     if ($success) {
+        // Valeurs brutes : l'échappement est fait côté client (escapeHtml dans review_form.js).
         echo json_encode([
             'success'  => true,
-            'username' => htmlspecialchars($username),
-            'content'  => htmlspecialchars($content),
+            'username' => $username,
+            'content'  => $content,
+            'grade'    => $grade,
         ]);
     } else {
         http_response_code(500);

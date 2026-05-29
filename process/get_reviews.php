@@ -15,9 +15,12 @@ if ($tourOperatorId <= 0) {
 $reviewRepo = new ReviewRepository($db);
 $reviews    = $reviewRepo->findByTourOperator($tourOperatorId);
 
+// Valeurs brutes : l'échappement est fait côté client (escapeHtml dans review_form.js).
+// Échapper ici provoquerait un double-échappement à l'affichage.
 $result = array_map(fn($r) => [
-    'username' => htmlspecialchars($r->getUsername()),
-    'content'  => htmlspecialchars($r->getContent()),
+    'username' => $r->getUsername(),
+    'content'  => $r->getContent(),
+    'grade'    => $r->getGrade(),
 ], $reviews);
 
 echo json_encode($result);

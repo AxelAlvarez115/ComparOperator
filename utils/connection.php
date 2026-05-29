@@ -42,6 +42,19 @@ $db->exec("
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 ");
 
+// Migration: colonne grade sur review (ajoutée après la création initiale de la table).
+// `ADD COLUMN IF NOT EXISTS` n'existe pas sur MySQL 8 (seulement MariaDB) : on teste
+// d'abord la présence de la colonne via information_schema pour rester compatible des deux.
+$hasGrade = (int) $db->query(
+    "SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE()
+       AND TABLE_NAME = 'review'
+       AND COLUMN_NAME = 'grade'"
+)->fetchColumn();
+if ($hasGrade === 0) {
+    $db->exec("ALTER TABLE `review` ADD COLUMN `grade` INT NULL");
+}
+
 // Insère les comptes par défaut si la table est vide
 $count = (int) $db->query("SELECT COUNT(*) FROM `user`")->fetchColumn();
 if ($count === 0) {

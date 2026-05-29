@@ -17,10 +17,16 @@ class ReviewRepository {
     }
 
     public function findByTourOperator(int $tourOperatorId): array {
+        // grade : on prend review.grade, et à défaut (avis anciens dont la note
+        // est stockée dans la table score) on retombe sur score.value.
         $stmt = $this->db->prepare(
-            'SELECT r.*, a.name as author_name
+            'SELECT r.id, r.message, r.tour_operator_id, r.author_id,
+                    a.name AS author_name,
+                    COALESCE(r.grade, s.value) AS grade
              FROM review r
              LEFT JOIN author a ON a.id = r.author_id
+             LEFT JOIN score  s ON s.tour_operator_id = r.tour_operator_id
+                                AND s.author_id = r.author_id
              WHERE r.tour_operator_id = ?
              ORDER BY r.id DESC'
         );
@@ -28,10 +34,10 @@ class ReviewRepository {
         return array_map(fn($row) => new Review($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
-    public function create(string $message, int $tourOperatorId, int $authorId): bool {
+    public function create(string $message, int $tourOperatorId, int $authorId, ?int $grade = null): bool {
         $stmt = $this->db->prepare(
-            'INSERT INTO review (message, tour_operator_id, author_id) VALUES (?, ?, ?)'
+            'INSERT INTO review (message, grade, tour_operator_id, author_id) VALUES (?, ?, ?, ?)'
         );
-        return $stmt->execute([$message, $tourOperatorId, $authorId]);
+        return $stmt->execute([$message, $grade, $tourOperatorId, $authorId]);
     }
 }

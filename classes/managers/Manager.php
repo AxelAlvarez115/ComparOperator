@@ -94,10 +94,14 @@ class Manager
     // Reviews
     // -------------------------------------------------------------------------
 
-    public function createReview(string $message, int $tourOperatorId, string $authorName): bool
+    public function createReview(string $message, int $tourOperatorId, string $authorName, ?int $grade = null): bool
     {
         $author = $this->authorRepo->findOrCreateByName($authorName);
-        return $this->reviewRepo->create($message, $tourOperatorId, $author->getId());
+        $ok     = $this->reviewRepo->create($message, $tourOperatorId, $author->getId(), $grade);
+        if ($ok && $grade !== null) {
+            $this->scoreRepo->createOrIgnore($grade, $tourOperatorId, $author->getId());
+        }
+        return $ok;
     }
 
     public function getReviewsByOperator(int $tourOperatorId): array

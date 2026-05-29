@@ -56,14 +56,23 @@ include '../partials/head.php';
                     <h3 class="font-semibold mb-3">Leave a review</h3>
                     <form id="reviewForm" class="flex flex-col gap-3">
                         <input type="hidden" id="operatorId" name="tour_operator_id">
-                        <div class="flex gap-2">
-                            <input
-                                class="border border-gray-300 rounded-lg p-2.5 w-1/3 outline-none focus:ring-2 focus:ring-orange-400 text-sm"
-                                type="text"
-                                id="reviewUsername"
-                                name="username"
-                                placeholder="Your name"
-                                required>
+                        <?php $authUser = currentUser(); ?>
+                        <div class="flex gap-2 items-center">
+                            <?php if ($authUser): ?>
+                                <input type="hidden" id="reviewUsername" name="username"
+                                       value="<?= htmlspecialchars($authUser['username']) ?>">
+                                <span class="text-xs text-gray-500 shrink-0">
+                                    Posting as <strong class="text-slate-700"><?= htmlspecialchars($authUser['username']) ?></strong>
+                                </span>
+                            <?php else: ?>
+                                <input
+                                    class="border border-gray-300 rounded-lg p-2.5 w-1/3 outline-none focus:ring-2 focus:ring-orange-400 text-sm"
+                                    type="text"
+                                    id="reviewUsername"
+                                    name="username"
+                                    placeholder="Your name"
+                                    required>
+                            <?php endif; ?>
                             <input
                                 class="border border-gray-300 rounded-lg p-2.5 flex-1 outline-none focus:ring-2 focus:ring-orange-400 text-sm"
                                 type="text"
@@ -71,6 +80,18 @@ include '../partials/head.php';
                                 name="content"
                                 placeholder="Share your experience..."
                                 required>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-500">Rating:</span>
+                            <div id="starRating" class="flex gap-0.5">
+                                <button type="button" class="star-btn text-2xl leading-none text-gray-300 hover:scale-110 transition-transform" data-value="1">★</button>
+                                <button type="button" class="star-btn text-2xl leading-none text-gray-300 hover:scale-110 transition-transform" data-value="2">★</button>
+                                <button type="button" class="star-btn text-2xl leading-none text-gray-300 hover:scale-110 transition-transform" data-value="3">★</button>
+                                <button type="button" class="star-btn text-2xl leading-none text-gray-300 hover:scale-110 transition-transform" data-value="4">★</button>
+                                <button type="button" class="star-btn text-2xl leading-none text-gray-300 hover:scale-110 transition-transform" data-value="5">★</button>
+                            </div>
+                            <input type="hidden" id="reviewGrade" name="grade">
+                            <span id="starLabel" class="text-xs text-gray-400"></span>
                         </div>
                         <button
                             type="submit"
@@ -85,5 +106,5 @@ include '../partials/head.php';
 
     <?php include '../partials/footer.php'; ?>
     <?php include '../partials/main_scripts.php'; ?>
-    <script src="/ComparOperator/assets/js/review_form.js"></script>
+    <script src="/ComparOperator/assets/js/review_form.js?v=<?= filemtime(__DIR__ . '/../assets/js/review_form.js') ?>"></script>
 </body>
