@@ -1,11 +1,16 @@
-<card class="w-full border border-gray-300 rounded-lg p-2 hover:bg-gray-100 flex justify-between items-start gap-4">
-    <div>
-        <span class="font-bold"><?= htmlspecialchars($review->getUsername()) ?></span>
-        <span class="text-xs italic text-gray-500">today</span><br>
-        <p><?= htmlspecialchars($review->getContent()) ?></p>
+<article class="w-full border border-gray-100 rounded-xl p-3 bg-gray-50 flex justify-between items-start gap-4">
+    <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 mb-1">
+            <span class="font-semibold text-sm text-slate-800"><?= htmlspecialchars($review->getUsername()) ?></span>
+            <span class="text-xs text-gray-400">·</span>
+            <span class="text-xs text-gray-400 italic">today</span>
+        </div>
+        <p class="text-sm text-gray-700 leading-relaxed"><?= htmlspecialchars($review->getContent()) ?></p>
     </div>
-    <button class="flex gap-1.5 cursor-pointer bg-orange-400 hover:bg-white hover:text-orange-400 text-white border-2 border-orange-400 rounded-full p-1.5 transition-colors">
-        <span class="ml-1.5"><?= htmlspecialchars($review->getGrade()) ?></span>
-        <img src="/ComparOperator/assets/img/icons/star_rate.svg" alt="star-rate">
-    </button>
-</card>
+    <?php if ($review->getGrade() !== null): ?>
+    <div class="flex items-center gap-1 bg-orange-50 border border-orange-200 rounded-full px-2.5 py-1 shrink-0">
+        <span class="text-xs font-bold text-orange-500"><?= $review->getGrade() ?></span>
+        <img src="/ComparOperator/assets/img/icons/star_rate.svg" alt="star" class="w-3.5 h-3.5">
+    </div>
+    <?php endif; ?>
+</article>

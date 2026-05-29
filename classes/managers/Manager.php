@@ -8,7 +8,7 @@ class Manager
     private DestinationRepository  $destinationRepo;
     private ReviewRepository       $reviewRepo;
     private ScoreRepository        $scoreRepo;
-    private CertificateRepository  $certificateRepo;
+    private AuthorRepository       $authorRepo;
 
     public function __construct(PDO $pdo)
     {
@@ -18,93 +18,99 @@ class Manager
         $this->destinationRepo  = new DestinationRepository($pdo);
         $this->reviewRepo       = new ReviewRepository($pdo);
         $this->scoreRepo        = new ScoreRepository($pdo);
-        $this->certificateRepo  = new CertificateRepository($pdo);
+        $this->authorRepo       = new AuthorRepository($pdo);
     }
 
     // -------------------------------------------------------------------------
     // Destinations
     // -------------------------------------------------------------------------
 
-    public function getAllDestination(): array
+    public function getAllDestinations(): array
     {
         return $this->destinationRepo->findAll();
     }
 
-    public function getOperatorByDestination(int $destinationId): ?TourOperator
+    public function getMainDestinations(): array
     {
-        return $this->tourOperatorRepo->findByDestination($destinationId);
+        return $this->destinationRepo->findAllMainDestination();
     }
 
-    public function createDestination(string $location, int $price, int $tourOperatorId): bool
+    public function createDestination(string $location, string $country, int $price, string $image, int $tourOperatorId): bool
     {
-        $destination = new Destination([
-            'id'               => 0,
-            'location'         => $location,
-            'price'            => $price,
-            'tour_operator_id' => $tourOperatorId,
-        ]);
-        return $this->destinationRepo->create($destination);
+        return $this->destinationRepo->create($location, $country, $price, $image, $tourOperatorId);
     }
 
-    // -------------------------------------------------------------------------
-    // Reviews
-    // -------------------------------------------------------------------------
-
-    public function createReview(string $message, int $tourOperatorId, int $authorId): bool
+    public function updateDestination(int $id, string $location, string $country, int $price, int $tourOperatorId): bool
     {
-        $review = new Review([
-            'id'               => 0,
-            'message'          => $message,
-            'tour_operator_id' => $tourOperatorId,
-            'author_id'        => $authorId,
-        ]);
-        return $this->reviewRepo->create($review);
-    }
-
-    public function getReviewByOperatorId(int $tourOperatorId): array
-    {
-        return $this->reviewRepo->findByTourOperator($tourOperatorId);
+        return $this->destinationRepo->update($id, $location, $country, $price, $tourOperatorId);
     }
 
     // -------------------------------------------------------------------------
     // Tour Operators
     // -------------------------------------------------------------------------
 
-    public function getAllOperator(): array
+    public function getAllOperators(): array
     {
         $operators = $this->tourOperatorRepo->findAll();
 
         foreach ($operators as $operator) {
-            $operator->setDestinations($this->destinationRepo->findByTourOperator($operator->getId()));
-            $operator->setReviews($this->reviewRepo->findByTourOperator($operator->getId()));
             $operator->setScores($this->scoreRepo->findByTourOperator($operator->getId()));
-            $operator->setCertificate($this->certificateRepo->findByTourOperator($operator->getId()));
+            $operator->setReviews($this->reviewRepo->findByTourOperator($operator->getId()));
+            $operator->setDestinations($this->destinationRepo->findByTourOperator($operator->getId()));
         }
 
         return $operators;
     }
 
-    public function updateOperatorToPremium(int $tourOperatorId, string $signatory, string $expiresAt): bool
+    public function getOperatorsByLocation(string $location): array
     {
-        // Remove existing certificate if any
-        $this->certificateRepo->delete($tourOperatorId);
+        $operators = $this->tourOperatorRepo->findByLocation($location);
 
-        $certificate = new Certificate([
-            'tour_operator_id' => $tourOperatorId,
-            'expires_at'       => $expiresAt,
-            'signatory'        => $signatory,
-        ]);
+        foreach ($operators as $operator) {
+            $operator->setScores($this->scoreRepo->findByTourOperator($operator->getId()));
+            $operator->setReviews($this->reviewRepo->findByTourOperator($operator->getId()));
+        }
 
-        return $this->certificateRepo->create($certificate);
+        return $operators;
     }
 
-    public function createTourOperator(string $name, string $link): bool
+    public function createTourOperator(string $name, string $link, bool $isPremium = false): bool
     {
         $tourOperator = new TourOperator([
-            'id'   => 0,
-            'name' => $name,
-            'link' => $link,
+            'id'         => 0,
+            'name'       => $name,
+            'link'       => $link,
+            'is_premium' => $isPremium,
         ]);
         return $this->tourOperatorRepo->create($tourOperator);
+    }
+
+    public function updateTourOperator(int $id, string $name, string $link, bool $isPremium): bool
+    {
+        return $this->tourOperatorRepo->update($id, $name, $link, $isPremium);
+    }
+
+    // -------------------------------------------------------------------------
+    // Reviews
+    // -------------------------------------------------------------------------
+
+    public function createReview(string $message, int $tourOperatorId, string $authorName): bool
+    {
+        $author = $this->authorRepo->findOrCreateByName($authorName);
+        return $this->reviewRepo->create($message, $tourOperatorId, $author->getId());
+    }
+
+    public function getReviewsByOperator(int $tourOperatorId): array
+    {
+        return $this->reviewRepo->findByTourOperator($tourOperatorId);
+    }
+
+    // -------------------------------------------------------------------------
+    // Scores
+    // -------------------------------------------------------------------------
+
+    public function getAverageScoreByOperator(int $tourOperatorId): ?float
+    {
+        return $this->scoreRepo->getAverageByTourOperator($tourOperatorId);
     }
 }

@@ -1,17 +1,23 @@
-const toggleHiddenCards = document.getElementById('toggleHiddenCards');
-const destinationsCard = document.querySelectorAll('.destination-card');
-const hiddenCards = [];
+const toggleBtn      = document.getElementById('toggleHiddenCards');
+const destinationCards = document.querySelectorAll('.destination-card');
+const hiddenCards    = [];
+let expanded         = false;
 
-destinationsCard.forEach((card, index) => {
+destinationCards.forEach((card, index) => {
     if (index >= 4) {
         card.classList.add('hidden');
         hiddenCards.push(card);
     }
 });
 
-toggleHiddenCards.addEventListener('click', () => {
+if (hiddenCards.length === 0 && toggleBtn) {
+    toggleBtn.style.display = 'none';
+}
+
+toggleBtn?.addEventListener('click', () => {
+    expanded = !expanded;
     hiddenCards.forEach(card => {
-        card.classList.toggle('hidden');
-        window.scrollBy({ top: card.offsetHeight, behavior: 'smooth' });
+        card.classList.toggle('hidden', !expanded);
     });
+    toggleBtn.textContent = expanded ? 'Show less ↑' : 'See all ↓';
 });
